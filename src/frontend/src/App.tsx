@@ -25,13 +25,149 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { SiWhatsapp } from "react-icons/si";
-import { useSubmitContactForm } from "./hooks/useQueries";
+import type { SiteContent } from "./backend.d";
+import {
+  useGetSeoSettings,
+  useGetSiteContent,
+  useSubmitContactForm,
+} from "./hooks/useQueries";
 
 // ── Smooth scroll helper ──────────────────────────────────────────────────────
 function scrollTo(id: string) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth" });
 }
+
+// ── Default content ───────────────────────────────────────────────────────────
+const DEFAULT_CONTENT: SiteContent = {
+  hero: {
+    backgroundImageUrl: "",
+    headline1: "Scale Smart.",
+    headline2: "Grow Digital.",
+    subheadline:
+      "We help businesses grow online with data-driven strategies, innovative campaigns, and measurable results that actually move the needle.",
+    ctaText: "Get Started Today",
+  },
+  services: {
+    badgeText: "What We Do",
+    heading: "Our Services",
+    subheading: "Full-spectrum digital marketing to accelerate your growth",
+    services: [
+      {
+        name: "Meta & Google Ads",
+        description: "Drive targeted traffic with paid ad campaigns",
+        imageUrl: "",
+      },
+      {
+        name: "Social Media Management",
+        description: "Build and grow your brand presence online",
+        imageUrl: "",
+      },
+      {
+        name: "Search Engine Optimization",
+        description: "Rank higher and get found on Google",
+        imageUrl: "",
+      },
+      {
+        name: "Content Marketing",
+        description: "Engage your audience with compelling content",
+        imageUrl: "",
+      },
+      {
+        name: "Brand Identity & Design",
+        description: "Create a brand that stands out",
+        imageUrl: "",
+      },
+      {
+        name: "WhatsApp Marketing",
+        description: "Reach customers directly on WhatsApp",
+        imageUrl: "",
+      },
+      {
+        name: "Performance Analytics",
+        description: "Data insights to optimize your growth",
+        imageUrl: "",
+      },
+    ],
+  },
+  whyUs: {
+    heading: "Why Choose RK NextGen?",
+    subheading:
+      "Creativity meets analytics — digital marketing that actually delivers results",
+    features: [
+      {
+        title: "Results-Driven Approach",
+        description:
+          "We focus on ROI, not just vanity metrics. Every campaign is built to deliver measurable business impact.",
+        iconUrl: "",
+      },
+      {
+        title: "Expert Team",
+        description:
+          "Experienced professionals across all digital channels — from paid media to SEO and content.",
+        iconUrl: "",
+      },
+      {
+        title: "Transparent Reporting",
+        description:
+          "Real-time dashboards and weekly reports so you're always in the loop on performance.",
+        iconUrl: "",
+      },
+      {
+        title: "Custom Strategies",
+        description:
+          "Tailored plans built for your specific business goals — not cookie-cutter solutions.",
+        iconUrl: "",
+      },
+    ],
+  },
+  about: {
+    heading: "About RK NextGen",
+    paragraph1:
+      "RK NextGen Marketing is a forward-thinking digital marketing agency dedicated to helping businesses scale their online presence. From startups to established brands, we deliver measurable results through innovative strategies and cutting-edge tools.",
+    paragraph2:
+      "Our team of passionate digital experts brings together expertise in paid advertising, SEO, content, and brand building — all under one roof. We don't just run campaigns; we build growth engines for your business.",
+    ctaText: "Work With Us",
+  },
+  contact: {
+    heading: "Get In Touch",
+    subheading:
+      "Ready to scale your business? Let's discuss your goals and build a strategy that delivers results.",
+    phone: "+91 7993549944",
+    email: "rknextgenmedia@gmail.com",
+  },
+  footer: {
+    tagline: "Scale Smart. Grow Digital.",
+    copyright: "© {year} RK NextGen Marketing. All rights reserved.",
+  },
+};
+
+// Icon map for services
+const SERVICE_ICONS = [
+  Target,
+  Share2,
+  Search,
+  FileText,
+  Palette,
+  MessageSquare,
+  BarChart3,
+];
+const SERVICE_COLORS = ["215", "270", "215", "295", "270", "215", "295"];
+
+// Icon map for why-us features
+const WHYUS_ICONS = [TrendingUp, Users, Eye, Lightbulb];
+const WHYUS_GRADIENTS = [
+  "oklch(0.72 0.19 215 / 0.2)",
+  "oklch(0.52 0.22 295 / 0.2)",
+  "oklch(0.52 0.22 295 / 0.2)",
+  "oklch(0.72 0.19 215 / 0.2)",
+];
+const WHYUS_ICON_COLORS = [
+  "oklch(0.80 0.16 215)",
+  "oklch(0.70 0.20 295)",
+  "oklch(0.70 0.20 295)",
+  "oklch(0.80 0.16 215)",
+];
 
 // ── Particle component ────────────────────────────────────────────────────────
 function Particles() {
@@ -215,7 +351,7 @@ function Navbar() {
 }
 
 // ── Hero Section ──────────────────────────────────────────────────────────────
-function HeroSection() {
+function HeroSection({ hero }: { hero: SiteContent["hero"] }) {
   return (
     <section
       id="hero"
@@ -249,18 +385,16 @@ function HeroSection() {
           {/* Main headline — asymmetric weight contrast */}
           <h1 className="font-display leading-none tracking-tight mb-8 animate-fade-in-up delay-100">
             <span className="block font-medium text-3xl sm:text-4xl md:text-5xl text-[oklch(0.65_0.06_215)] mb-2 tracking-widest uppercase">
-              Scale Smart.
+              {hero.headline1}
             </span>
             <span className="block font-black text-6xl sm:text-7xl md:text-8xl lg:text-[6.5rem] gradient-text leading-none">
-              Grow Digital.
+              {hero.headline2}
             </span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-[oklch(0.68_0.04_240)] max-w-xl mb-10 leading-relaxed animate-fade-in-up delay-200">
-            We help businesses grow online with data-driven strategies,
-            innovative campaigns, and measurable results that actually move the
-            needle.
+            {hero.subheadline}
           </p>
 
           {/* CTAs */}
@@ -270,7 +404,7 @@ function HeroSection() {
               onClick={() => scrollTo("contact")}
               className="gradient-bg text-white font-semibold px-8 py-3 text-base rounded-full border-0 hover:opacity-90 transition-all duration-200 shadow-glow-blue h-auto"
             >
-              Get Started Today
+              {hero.ctaText}
               <ChevronRight size={18} className="ml-1" />
             </Button>
 
@@ -325,52 +459,9 @@ function HeroSection() {
 }
 
 // ── Services Section ──────────────────────────────────────────────────────────
-const SERVICES = [
-  {
-    icon: Target,
-    name: "Meta & Google Ads",
-    desc: "Drive targeted traffic with paid ad campaigns",
-    color: "215",
-  },
-  {
-    icon: Share2,
-    name: "Social Media Management",
-    desc: "Build and grow your brand presence online",
-    color: "270",
-  },
-  {
-    icon: Search,
-    name: "Search Engine Optimization",
-    desc: "Rank higher and get found on Google",
-    color: "215",
-  },
-  {
-    icon: FileText,
-    name: "Content Marketing",
-    desc: "Engage your audience with compelling content",
-    color: "295",
-  },
-  {
-    icon: Palette,
-    name: "Brand Identity & Design",
-    desc: "Create a brand that stands out",
-    color: "270",
-  },
-  {
-    icon: MessageSquare,
-    name: "WhatsApp Marketing",
-    desc: "Reach customers directly on WhatsApp",
-    color: "215",
-  },
-  {
-    icon: BarChart3,
-    name: "Performance Analytics",
-    desc: "Data insights to optimize your growth",
-    color: "295",
-  },
-];
-
-function ServicesSection() {
+function ServicesSection({
+  services: sec,
+}: { services: SiteContent["services"] }) {
   return (
     <section
       id="services"
@@ -393,22 +484,32 @@ function ServicesSection() {
             </div>
             <div className="pt-2 md:pt-4">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[oklch(0.72_0.19_215/0.3)] bg-[oklch(0.72_0.19_215/0.06)] text-sm text-[oklch(0.80_0.16_215)] mb-3">
-                What We Do
+                {sec.badgeText}
               </div>
               <h2 className="font-display font-black text-4xl md:text-5xl text-white mb-3 leading-tight">
-                Our <span className="gradient-text">Services</span>
+                {sec.heading.includes(" ") ? (
+                  <>
+                    {sec.heading.split(" ").slice(0, -1).join(" ")}{" "}
+                    <span className="gradient-text">
+                      {sec.heading.split(" ").slice(-1)[0]}
+                    </span>
+                  </>
+                ) : (
+                  <span className="gradient-text">{sec.heading}</span>
+                )}
               </h2>
               <p className="text-[oklch(0.62_0.04_240)] text-lg max-w-lg">
-                Full-spectrum digital marketing to accelerate your growth
+                {sec.subheading}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Cards grid — featured first card + 3-col rest */}
+        {/* Cards grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {SERVICES.map((service, i) => {
-            const Icon = service.icon;
+          {sec.services.map((service, i) => {
+            const Icon = SERVICE_ICONS[i % SERVICE_ICONS.length];
+            const color = SERVICE_COLORS[i % SERVICE_COLORS.length];
             const isFeatured = i === 0;
             return (
               <div
@@ -438,12 +539,12 @@ function ServicesSection() {
                 <div
                   className={`rounded-xl flex items-center justify-center mb-4 ${isFeatured ? "w-16 h-16" : "w-12 h-12"}`}
                   style={{
-                    background: `oklch(0.72 0.19 ${service.color} / ${isFeatured ? "0.2" : "0.15"})`,
+                    background: `oklch(0.72 0.19 ${color} / ${isFeatured ? "0.2" : "0.15"})`,
                   }}
                 >
                   <Icon
                     size={isFeatured ? 28 : 22}
-                    style={{ color: `oklch(0.80 0.16 ${service.color})` }}
+                    style={{ color: `oklch(0.80 0.16 ${color})` }}
                   />
                 </div>
 
@@ -455,7 +556,7 @@ function ServicesSection() {
                 <p
                   className={`text-[oklch(0.62_0.04_240)] leading-relaxed ${isFeatured ? "text-base mb-5" : "text-sm"}`}
                 >
-                  {service.desc}
+                  {service.description}
                 </p>
 
                 {/* Featured card stat pull */}
@@ -488,30 +589,7 @@ function ServicesSection() {
 }
 
 // ── Why Choose Us ─────────────────────────────────────────────────────────────
-const WHY_FEATURES = [
-  {
-    icon: TrendingUp,
-    title: "Results-Driven Approach",
-    desc: "We focus on ROI, not just vanity metrics. Every campaign is built to deliver measurable business impact.",
-  },
-  {
-    icon: Users,
-    title: "Expert Team",
-    desc: "Experienced professionals across all digital channels — from paid media to SEO and content.",
-  },
-  {
-    icon: Eye,
-    title: "Transparent Reporting",
-    desc: "Real-time dashboards and weekly reports so you're always in the loop on performance.",
-  },
-  {
-    icon: Lightbulb,
-    title: "Custom Strategies",
-    desc: "Tailored plans built for your specific business goals — not cookie-cutter solutions.",
-  },
-];
-
-function WhyUsSection() {
+function WhyUsSection({ whyUs }: { whyUs: SiteContent["whyUs"] }) {
   return (
     <section
       id="why-us"
@@ -522,7 +600,7 @@ function WhyUsSection() {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Editorial section header — magazine number anchor */}
+        {/* Editorial section header */}
         <div className="mb-16">
           <div className="flex items-start gap-6 md:gap-10">
             <div
@@ -536,31 +614,27 @@ function WhyUsSection() {
                 Our Advantage
               </div>
               <h2 className="font-display font-black text-4xl md:text-5xl text-white mb-3 leading-tight">
-                Why Choose <span className="gradient-text">RK NextGen?</span>
+                {whyUs.heading.includes("RK") ? (
+                  <>
+                    Why Choose{" "}
+                    <span className="gradient-text">
+                      {whyUs.heading.replace("Why Choose ", "")}
+                    </span>
+                  </>
+                ) : (
+                  whyUs.heading
+                )}
               </h2>
               <p className="text-[oklch(0.62_0.04_240)] text-lg max-w-lg">
-                Creativity meets analytics — digital marketing that actually
-                delivers results
+                {whyUs.subheading}
               </p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {WHY_FEATURES.map((feature, i) => {
-            const Icon = feature.icon;
-            const gradients = [
-              "oklch(0.72 0.19 215 / 0.2)",
-              "oklch(0.52 0.22 295 / 0.2)",
-              "oklch(0.52 0.22 295 / 0.2)",
-              "oklch(0.72 0.19 215 / 0.2)",
-            ];
-            const iconColors = [
-              "oklch(0.80 0.16 215)",
-              "oklch(0.70 0.20 295)",
-              "oklch(0.70 0.20 295)",
-              "oklch(0.80 0.16 215)",
-            ];
+          {whyUs.features.map((feature, i) => {
+            const Icon = WHYUS_ICONS[i % WHYUS_ICONS.length];
             return (
               <div
                 key={feature.title}
@@ -569,16 +643,23 @@ function WhyUsSection() {
                 {/* Icon circle */}
                 <div
                   className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: gradients[i] }}
+                  style={{
+                    background: WHYUS_GRADIENTS[i % WHYUS_GRADIENTS.length],
+                  }}
                 >
-                  <Icon size={26} style={{ color: iconColors[i] }} />
+                  <Icon
+                    size={26}
+                    style={{
+                      color: WHYUS_ICON_COLORS[i % WHYUS_ICON_COLORS.length],
+                    }}
+                  />
                 </div>
                 <div>
                   <h3 className="font-display font-bold text-white text-xl mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-[oklch(0.62_0.04_240)] leading-relaxed">
-                    {feature.desc}
+                    {feature.description}
                   </p>
                 </div>
               </div>
@@ -591,7 +672,7 @@ function WhyUsSection() {
 }
 
 // ── About Us Section ──────────────────────────────────────────────────────────
-function AboutSection() {
+function AboutSection({ about }: { about: SiteContent["about"] }) {
   return (
     <section
       id="about"
@@ -631,26 +712,28 @@ function AboutSection() {
               Our Story
             </div>
             <h2 className="font-display font-black text-4xl md:text-5xl text-white mb-6 leading-tight">
-              About <span className="gradient-text">RK NextGen</span>
+              {about.heading.includes(" ") ? (
+                <>
+                  {about.heading.split(" ").slice(0, -1).join(" ")}{" "}
+                  <span className="gradient-text">
+                    {about.heading.split(" ").slice(-1)[0]}
+                  </span>
+                </>
+              ) : (
+                about.heading
+              )}
             </h2>
             <p className="text-[oklch(0.68_0.04_240)] text-lg leading-relaxed mb-6">
-              RK NextGen Marketing is a forward-thinking digital marketing
-              agency dedicated to helping businesses scale their online
-              presence. From startups to established brands, we deliver
-              measurable results through innovative strategies and cutting-edge
-              tools.
+              {about.paragraph1}
             </p>
             <p className="text-[oklch(0.62_0.04_240)] leading-relaxed mb-8">
-              Our team of passionate digital experts brings together expertise
-              in paid advertising, SEO, content, and brand building — all under
-              one roof. We don't just run campaigns; we build growth engines for
-              your business.
+              {about.paragraph2}
             </p>
             <Button
               onClick={() => scrollTo("contact")}
               className="gradient-bg text-white font-semibold px-7 py-3 rounded-full border-0 h-auto hover:opacity-90 transition-opacity"
             >
-              Work With Us
+              {about.ctaText}
               <ChevronRight size={18} className="ml-1" />
             </Button>
           </div>
@@ -697,7 +780,7 @@ function AboutSection() {
 }
 
 // ── Contact Section ───────────────────────────────────────────────────────────
-function ContactSection() {
+function ContactSection({ contact }: { contact: SiteContent["contact"] }) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -734,11 +817,19 @@ function ContactSection() {
             Let's Talk
           </div>
           <h2 className="font-display font-black text-4xl md:text-5xl text-white mb-4">
-            Get <span className="gradient-text">In Touch</span>
+            {contact.heading.includes(" ") ? (
+              <>
+                {contact.heading.split(" ").slice(0, -2).join(" ")}{" "}
+                <span className="gradient-text">
+                  {contact.heading.split(" ").slice(-2).join(" ")}
+                </span>
+              </>
+            ) : (
+              contact.heading
+            )}
           </h2>
           <p className="text-[oklch(0.65_0.04_240)] text-lg max-w-xl mx-auto">
-            Ready to scale your business? Let's discuss your goals and build a
-            strategy that delivers results.
+            {contact.subheading}
           </p>
         </div>
 
@@ -752,7 +843,7 @@ function ContactSection() {
 
               <div className="space-y-5">
                 <a
-                  href="tel:7993549944"
+                  href={`tel:${contact.phone.replace(/\D/g, "")}`}
                   className="flex items-center gap-4 group"
                 >
                   <div className="w-11 h-11 rounded-xl bg-[oklch(0.72_0.19_215/0.15)] flex items-center justify-center flex-shrink-0 group-hover:bg-[oklch(0.72_0.19_215/0.25)] transition-colors">
@@ -763,13 +854,13 @@ function ContactSection() {
                       Phone
                     </div>
                     <div className="text-white font-medium group-hover:text-[oklch(0.80_0.16_215)] transition-colors">
-                      +91 7993549944
+                      {contact.phone}
                     </div>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:rknextgenmedia@gmail.com"
+                  href={`mailto:${contact.email}`}
                   className="flex items-center gap-4 group"
                 >
                   <div className="w-11 h-11 rounded-xl bg-[oklch(0.52_0.22_295/0.15)] flex items-center justify-center flex-shrink-0 group-hover:bg-[oklch(0.52_0.22_295/0.25)] transition-colors">
@@ -780,7 +871,7 @@ function ContactSection() {
                       Email
                     </div>
                     <div className="text-white font-medium group-hover:text-[oklch(0.70_0.20_295)] transition-colors break-all">
-                      rknextgenmedia@gmail.com
+                      {contact.email}
                     </div>
                   </div>
                 </a>
@@ -976,8 +1067,9 @@ function FloatingWhatsApp() {
 }
 
 // ── Footer ────────────────────────────────────────────────────────────────────
-function Footer() {
+function Footer({ footer }: { footer: SiteContent["footer"] }) {
   const year = new Date().getFullYear();
+  const copyright = footer.copyright.replace("{year}", String(year));
 
   return (
     <footer
@@ -1001,7 +1093,7 @@ function Footer() {
               their online presence with data-driven strategies.
             </p>
             <p className="gradient-text font-display font-bold text-sm tracking-wider">
-              Scale Smart. Grow Digital.
+              {footer.tagline}
             </p>
           </div>
 
@@ -1076,9 +1168,7 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-[oklch(0.20_0.03_255)] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[oklch(0.50_0.03_240)] text-sm">
-            © {year} RK NextGen Marketing. All rights reserved.
-          </p>
+          <p className="text-[oklch(0.50_0.03_240)] text-sm">{copyright}</p>
           <p className="text-[oklch(0.45_0.03_240)] text-xs">
             Built with ❤️ using{" "}
             <a
@@ -1099,6 +1189,76 @@ function Footer() {
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const { data: seoData } = useGetSeoSettings();
+  const { data: contentData } = useGetSiteContent();
+
+  // Merge backend content with defaults
+  const content: SiteContent = contentData
+    ? {
+        ...DEFAULT_CONTENT,
+        ...contentData,
+        hero: { ...DEFAULT_CONTENT.hero, ...contentData.hero },
+        services: {
+          ...DEFAULT_CONTENT.services,
+          ...contentData.services,
+          services: contentData.services?.services?.length
+            ? contentData.services.services
+            : DEFAULT_CONTENT.services.services,
+        },
+        whyUs: {
+          ...DEFAULT_CONTENT.whyUs,
+          ...contentData.whyUs,
+          features: contentData.whyUs?.features?.length
+            ? contentData.whyUs.features
+            : DEFAULT_CONTENT.whyUs.features,
+        },
+        about: { ...DEFAULT_CONTENT.about, ...contentData.about },
+        contact: { ...DEFAULT_CONTENT.contact, ...contentData.contact },
+        footer: { ...DEFAULT_CONTENT.footer, ...contentData.footer },
+      }
+    : DEFAULT_CONTENT;
+
+  // Apply SEO meta tags
+  useEffect(() => {
+    if (!seoData) return;
+
+    // Title
+    if (seoData.title) {
+      document.title = seoData.title;
+    }
+
+    const setMeta = (name: string, content: string, property?: boolean) => {
+      const attr = property ? "property" : "name";
+      let el = document.querySelector(
+        `meta[${attr}="${name}"]`,
+      ) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    if (seoData.metaDescription) {
+      setMeta("description", seoData.metaDescription);
+      setMeta("og:description", seoData.metaDescription, true);
+      setMeta("twitter:description", seoData.metaDescription);
+    }
+    if (seoData.metaKeywords) {
+      setMeta("keywords", seoData.metaKeywords);
+    }
+    if (seoData.title) {
+      setMeta("og:title", seoData.title, true);
+      setMeta("twitter:title", seoData.title);
+    }
+    if (seoData.ogImageUrl) {
+      setMeta("og:image", seoData.ogImageUrl, true);
+      setMeta("twitter:card", "summary_large_image");
+      setMeta("twitter:image", seoData.ogImageUrl);
+    }
+    setMeta("og:type", "website", true);
+  }, [seoData]);
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -1120,13 +1280,13 @@ export default function App() {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
       <main>
-        <HeroSection />
-        <ServicesSection />
-        <WhyUsSection />
-        <AboutSection />
-        <ContactSection />
+        <HeroSection hero={content.hero} />
+        <ServicesSection services={content.services} />
+        <WhyUsSection whyUs={content.whyUs} />
+        <AboutSection about={content.about} />
+        <ContactSection contact={content.contact} />
       </main>
-      <Footer />
+      <Footer footer={content.footer} />
       <FloatingWhatsApp />
     </div>
   );

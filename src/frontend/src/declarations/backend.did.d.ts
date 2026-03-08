@@ -10,15 +10,80 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface AboutSection {
+  'paragraph1' : string,
+  'paragraph2' : string,
+  'heading' : string,
+  'ctaText' : string,
+}
+export interface ContactSection {
+  'subheading' : string,
+  'heading' : string,
+  'email' : string,
+  'phone' : string,
+}
 export interface ContactSubmission {
   'name' : string,
   'message' : string,
-  'timestamp' : bigint,
+  'timestamp' : Time,
   'phone' : string,
 }
+export interface FooterSection { 'tagline' : string, 'copyright' : string }
+export interface HeroSection {
+  'backgroundImageUrl' : string,
+  'headline1' : string,
+  'headline2' : string,
+  'ctaText' : string,
+  'subheadline' : string,
+}
+export interface SEOSettings {
+  'metaDescription' : string,
+  'title' : string,
+  'metaKeywords' : string,
+  'ogImageUrl' : string,
+}
+export interface Service {
+  'name' : string,
+  'description' : string,
+  'imageUrl' : string,
+}
+export interface ServicesSection {
+  'subheading' : string,
+  'badgeText' : string,
+  'heading' : string,
+  'services' : Array<Service>,
+}
+export interface SiteContent {
+  'contact' : ContactSection,
+  'about' : AboutSection,
+  'hero' : HeroSection,
+  'whyUs' : WhyUsSection,
+  'services' : ServicesSection,
+  'footer' : FooterSection,
+}
+export type Time = bigint;
+export interface WhyUsFeature {
+  'title' : string,
+  'description' : string,
+  'iconUrl' : string,
+}
+export interface WhyUsSection {
+  'subheading' : string,
+  'features' : Array<WhyUsFeature>,
+  'heading' : string,
+}
 export interface _SERVICE {
-  'getAllSubmissions' : ActorMethod<[], Array<ContactSubmission>>,
+  'adminLogin' : ActorMethod<[string, string], string>,
+  'adminLogout' : ActorMethod<[string], boolean>,
+  'deleteAllSubmissions' : ActorMethod<[string], undefined>,
+  'deleteSubmission' : ActorMethod<[string, bigint], undefined>,
+  'getAllSubmissions' : ActorMethod<[string], Array<ContactSubmission>>,
+  'getPublicSeoSettings' : ActorMethod<[], [] | [SEOSettings]>,
+  'getPublicSiteContent' : ActorMethod<[], [] | [SiteContent]>,
+  'saveSeoSettings' : ActorMethod<[string, SEOSettings], undefined>,
+  'saveSiteContent' : ActorMethod<[string, SiteContent], undefined>,
   'submitContactForm' : ActorMethod<[string, string, string], undefined>,
+  'verifyAdminToken' : ActorMethod<[string], boolean>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

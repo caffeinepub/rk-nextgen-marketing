@@ -89,29 +89,210 @@ export class ExternalBlob {
         return this;
     }
 }
+export type Time = bigint;
+export interface ContactSection {
+    subheading: string;
+    heading: string;
+    email: string;
+    phone: string;
+}
+export interface SEOSettings {
+    metaDescription: string;
+    title: string;
+    metaKeywords: string;
+    ogImageUrl: string;
+}
 export interface ContactSubmission {
     name: string;
     message: string;
-    timestamp: bigint;
+    timestamp: Time;
     phone: string;
 }
-export interface backendInterface {
-    getAllSubmissions(): Promise<Array<ContactSubmission>>;
-    submitContactForm(name: string, phone: string, message: string): Promise<void>;
+export interface WhyUsFeature {
+    title: string;
+    description: string;
+    iconUrl: string;
 }
+export interface AboutSection {
+    paragraph1: string;
+    paragraph2: string;
+    heading: string;
+    ctaText: string;
+}
+export interface Service {
+    name: string;
+    description: string;
+    imageUrl: string;
+}
+export interface WhyUsSection {
+    subheading: string;
+    features: Array<WhyUsFeature>;
+    heading: string;
+}
+export interface SiteContent {
+    contact: ContactSection;
+    about: AboutSection;
+    hero: HeroSection;
+    whyUs: WhyUsSection;
+    services: ServicesSection;
+    footer: FooterSection;
+}
+export interface ServicesSection {
+    subheading: string;
+    badgeText: string;
+    heading: string;
+    services: Array<Service>;
+}
+export interface HeroSection {
+    backgroundImageUrl: string;
+    headline1: string;
+    headline2: string;
+    ctaText: string;
+    subheadline: string;
+}
+export interface FooterSection {
+    tagline: string;
+    copyright: string;
+}
+export interface backendInterface {
+    adminLogin(username: string, password: string): Promise<string>;
+    adminLogout(token: string): Promise<boolean>;
+    deleteAllSubmissions(token: string): Promise<void>;
+    deleteSubmission(token: string, index: bigint): Promise<void>;
+    getAllSubmissions(token: string): Promise<Array<ContactSubmission>>;
+    getPublicSeoSettings(): Promise<SEOSettings | null>;
+    getPublicSiteContent(): Promise<SiteContent | null>;
+    saveSeoSettings(token: string, seo: SEOSettings): Promise<void>;
+    saveSiteContent(token: string, content: SiteContent): Promise<void>;
+    submitContactForm(name: string, phone: string, message: string): Promise<void>;
+    verifyAdminToken(token: string): Promise<boolean>;
+}
+import type { SEOSettings as _SEOSettings, SiteContent as _SiteContent } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
-    async getAllSubmissions(): Promise<Array<ContactSubmission>> {
+    async adminLogin(arg0: string, arg1: string): Promise<string> {
         if (this.processError) {
             try {
-                const result = await this.actor.getAllSubmissions();
+                const result = await this.actor.adminLogin(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getAllSubmissions();
+            const result = await this.actor.adminLogin(arg0, arg1);
+            return result;
+        }
+    }
+    async adminLogout(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.adminLogout(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.adminLogout(arg0);
+            return result;
+        }
+    }
+    async deleteAllSubmissions(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteAllSubmissions(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteAllSubmissions(arg0);
+            return result;
+        }
+    }
+    async deleteSubmission(arg0: string, arg1: bigint): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteSubmission(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteSubmission(arg0, arg1);
+            return result;
+        }
+    }
+    async getAllSubmissions(arg0: string): Promise<Array<ContactSubmission>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllSubmissions(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllSubmissions(arg0);
+            return result;
+        }
+    }
+    async getPublicSeoSettings(): Promise<SEOSettings | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPublicSeoSettings();
+                return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPublicSeoSettings();
+            return from_candid_opt_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getPublicSiteContent(): Promise<SiteContent | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPublicSiteContent();
+                return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPublicSiteContent();
+            return from_candid_opt_n2(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async saveSeoSettings(arg0: string, arg1: SEOSettings): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveSeoSettings(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveSeoSettings(arg0, arg1);
+            return result;
+        }
+    }
+    async saveSiteContent(arg0: string, arg1: SiteContent): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveSiteContent(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveSiteContent(arg0, arg1);
             return result;
         }
     }
@@ -129,6 +310,26 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async verifyAdminToken(arg0: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.verifyAdminToken(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.verifyAdminToken(arg0);
+            return result;
+        }
+    }
+}
+function from_candid_opt_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SEOSettings]): SEOSettings | null {
+    return value.length === 0 ? null : value[0];
+}
+function from_candid_opt_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_SiteContent]): SiteContent | null {
+    return value.length === 0 ? null : value[0];
 }
 export interface CreateActorOptions {
     agent?: Agent;

@@ -8,31 +8,171 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const Time = IDL.Int;
 export const ContactSubmission = IDL.Record({
   'name' : IDL.Text,
   'message' : IDL.Text,
-  'timestamp' : IDL.Int,
+  'timestamp' : Time,
   'phone' : IDL.Text,
+});
+export const SEOSettings = IDL.Record({
+  'metaDescription' : IDL.Text,
+  'title' : IDL.Text,
+  'metaKeywords' : IDL.Text,
+  'ogImageUrl' : IDL.Text,
+});
+export const ContactSection = IDL.Record({
+  'subheading' : IDL.Text,
+  'heading' : IDL.Text,
+  'email' : IDL.Text,
+  'phone' : IDL.Text,
+});
+export const AboutSection = IDL.Record({
+  'paragraph1' : IDL.Text,
+  'paragraph2' : IDL.Text,
+  'heading' : IDL.Text,
+  'ctaText' : IDL.Text,
+});
+export const HeroSection = IDL.Record({
+  'backgroundImageUrl' : IDL.Text,
+  'headline1' : IDL.Text,
+  'headline2' : IDL.Text,
+  'ctaText' : IDL.Text,
+  'subheadline' : IDL.Text,
+});
+export const WhyUsFeature = IDL.Record({
+  'title' : IDL.Text,
+  'description' : IDL.Text,
+  'iconUrl' : IDL.Text,
+});
+export const WhyUsSection = IDL.Record({
+  'subheading' : IDL.Text,
+  'features' : IDL.Vec(WhyUsFeature),
+  'heading' : IDL.Text,
+});
+export const Service = IDL.Record({
+  'name' : IDL.Text,
+  'description' : IDL.Text,
+  'imageUrl' : IDL.Text,
+});
+export const ServicesSection = IDL.Record({
+  'subheading' : IDL.Text,
+  'badgeText' : IDL.Text,
+  'heading' : IDL.Text,
+  'services' : IDL.Vec(Service),
+});
+export const FooterSection = IDL.Record({
+  'tagline' : IDL.Text,
+  'copyright' : IDL.Text,
+});
+export const SiteContent = IDL.Record({
+  'contact' : ContactSection,
+  'about' : AboutSection,
+  'hero' : HeroSection,
+  'whyUs' : WhyUsSection,
+  'services' : ServicesSection,
+  'footer' : FooterSection,
 });
 
 export const idlService = IDL.Service({
-  'getAllSubmissions' : IDL.Func([], [IDL.Vec(ContactSubmission)], ['query']),
+  'adminLogin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+  'adminLogout' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'deleteAllSubmissions' : IDL.Func([IDL.Text], [], []),
+  'deleteSubmission' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+  'getAllSubmissions' : IDL.Func([IDL.Text], [IDL.Vec(ContactSubmission)], []),
+  'getPublicSeoSettings' : IDL.Func([], [IDL.Opt(SEOSettings)], ['query']),
+  'getPublicSiteContent' : IDL.Func([], [IDL.Opt(SiteContent)], ['query']),
+  'saveSeoSettings' : IDL.Func([IDL.Text, SEOSettings], [], []),
+  'saveSiteContent' : IDL.Func([IDL.Text, SiteContent], [], []),
   'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+  'verifyAdminToken' : IDL.Func([IDL.Text], [IDL.Bool], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const Time = IDL.Int;
   const ContactSubmission = IDL.Record({
     'name' : IDL.Text,
     'message' : IDL.Text,
-    'timestamp' : IDL.Int,
+    'timestamp' : Time,
     'phone' : IDL.Text,
+  });
+  const SEOSettings = IDL.Record({
+    'metaDescription' : IDL.Text,
+    'title' : IDL.Text,
+    'metaKeywords' : IDL.Text,
+    'ogImageUrl' : IDL.Text,
+  });
+  const ContactSection = IDL.Record({
+    'subheading' : IDL.Text,
+    'heading' : IDL.Text,
+    'email' : IDL.Text,
+    'phone' : IDL.Text,
+  });
+  const AboutSection = IDL.Record({
+    'paragraph1' : IDL.Text,
+    'paragraph2' : IDL.Text,
+    'heading' : IDL.Text,
+    'ctaText' : IDL.Text,
+  });
+  const HeroSection = IDL.Record({
+    'backgroundImageUrl' : IDL.Text,
+    'headline1' : IDL.Text,
+    'headline2' : IDL.Text,
+    'ctaText' : IDL.Text,
+    'subheadline' : IDL.Text,
+  });
+  const WhyUsFeature = IDL.Record({
+    'title' : IDL.Text,
+    'description' : IDL.Text,
+    'iconUrl' : IDL.Text,
+  });
+  const WhyUsSection = IDL.Record({
+    'subheading' : IDL.Text,
+    'features' : IDL.Vec(WhyUsFeature),
+    'heading' : IDL.Text,
+  });
+  const Service = IDL.Record({
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+    'imageUrl' : IDL.Text,
+  });
+  const ServicesSection = IDL.Record({
+    'subheading' : IDL.Text,
+    'badgeText' : IDL.Text,
+    'heading' : IDL.Text,
+    'services' : IDL.Vec(Service),
+  });
+  const FooterSection = IDL.Record({
+    'tagline' : IDL.Text,
+    'copyright' : IDL.Text,
+  });
+  const SiteContent = IDL.Record({
+    'contact' : ContactSection,
+    'about' : AboutSection,
+    'hero' : HeroSection,
+    'whyUs' : WhyUsSection,
+    'services' : ServicesSection,
+    'footer' : FooterSection,
   });
   
   return IDL.Service({
-    'getAllSubmissions' : IDL.Func([], [IDL.Vec(ContactSubmission)], ['query']),
+    'adminLogin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+    'adminLogout' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'deleteAllSubmissions' : IDL.Func([IDL.Text], [], []),
+    'deleteSubmission' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+    'getAllSubmissions' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(ContactSubmission)],
+        [],
+      ),
+    'getPublicSeoSettings' : IDL.Func([], [IDL.Opt(SEOSettings)], ['query']),
+    'getPublicSiteContent' : IDL.Func([], [IDL.Opt(SiteContent)], ['query']),
+    'saveSeoSettings' : IDL.Func([IDL.Text, SEOSettings], [], []),
+    'saveSiteContent' : IDL.Func([IDL.Text, SiteContent], [], []),
     'submitContactForm' : IDL.Func([IDL.Text, IDL.Text, IDL.Text], [], []),
+    'verifyAdminToken' : IDL.Func([IDL.Text], [IDL.Bool], []),
   });
 };
 
